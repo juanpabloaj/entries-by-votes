@@ -1,15 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
 from entries import Opml, Feed
 from entries import HackerNews, Reddit
 from tornado import gen, queues
 from tornado.ioloop import IOLoop
 from concurrent.futures import ThreadPoolExecutor
+from motor.motor_tornado import MotorClient
 
 thread_pool = ThreadPoolExecutor(2)
 
 feeds = queues.Queue()
 entries = queues.Queue()
+client = MotorClient(os.environ['MONGO_ENTRIES'])
+db = client['entries-by-votes']
+
+
+@gen.coroutine
+def do_insert_entry(entry):
+    yield db.entries.insert_one(entry)
 
 
 @gen.coroutine
@@ -55,9 +64,16 @@ def entries_consumer():
             if votes != []:
                 current_entry.set_votes(votes)
                 print(
-                    current_entry, current_entry.days_age(),
-                    current_entry.links, current_entry.get_rank()
+                    current_entry.published, current_entry.title,
+                    link, current_entry.get_rank()
                 )
+                yield do_insert_entry({
+                    'title': current_entry.title,
+                    'link': link,
+                    'published': current_entry.published,
+                    'votes': current_entry.votes,
+                    'rank': current_entry.get_rank()
+                })
         yield gen.sleep(1)
 
 
