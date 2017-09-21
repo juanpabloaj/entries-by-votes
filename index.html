@@ -1,17 +1,17 @@
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="UTF-8" />
-            <title>Entries by votes</title>
-        </head>
-        <body>
-     <ul>
-       {% for entry in entries %}
-       <li>
-           {{ entry['published'] }} <a href="{{entry['link']}}" target="_blank">{{ entry['title'] }}</a>
-           {{ round(entry['rank'], 2) }} {{ entry['votes'] }}
-       </li>
-       {% end %}
-     </ul>
-        </body>
-    </html>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Entries by votes</title>
+    </head>
+    <body>
+ <ul>
+   {% for entry in entries %}
+   <li>
+       {{ entry['published'] }} {{ int(entry['total_votes']) }} {{ round(entry['rank'], 2) }} <a href="{{entry['link']}}" target="_blank">{{ entry['title'] }}</a>
+       <!--{{ entry['votes'] }}-->
+   </li>
+   {% end %}
+ </ul>
+    </body>
+</html>
