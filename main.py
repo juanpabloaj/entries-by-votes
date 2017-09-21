@@ -28,7 +28,7 @@ def make_app():
 
 
 if __name__ == "__main__":
-    port = 8080
+    port = os.environ.get('TORNADO_PORT', 8888)
     print('Starting app in port {}'.format(port))
     app = make_app()
     app.listen(port)
