@@ -59,33 +59,41 @@ def votes_from_entry(link):
 def entries_consumer():
     while True:
         current_entry = yield entries.get()
+        print('Fetching entry', current_entry.published, current_entry)
+        try:
+            for link in current_entry.links:
+                votes = yield votes_from_entry(link)
 
-        for link in current_entry.links:
-            votes = yield votes_from_entry(link)
-
-            if votes != []:
-                current_entry.set_votes(votes)
-                print(
-                    current_entry.published, current_entry.title,
-                    link, current_entry.get_rank()
-                )
-                yield do_insert_entry({
-                    'title': current_entry.title,
-                    'link': link,
-                    'published': current_entry.published,
-                    'votes': current_entry.votes,
-                    'rank': current_entry.get_rank()
-                })
-        yield gen.sleep(1)
+                if votes != []:
+                    current_entry.set_votes(votes)
+                    print(
+                        current_entry.published, current_entry.title,
+                        link, current_entry.get_rank()
+                    )
+                    yield do_insert_entry({
+                        'title': current_entry.title,
+                        'link': link,
+                        'published': current_entry.published,
+                        'votes': current_entry.votes,
+                        'total_votes': current_entry.get_total_votes(),
+                        'rank': current_entry.get_rank()
+                    })
+            yield gen.sleep(1)
+        finally:
+            entries.task_done()
 
 
 @gen.coroutine
 def get_new_entries_from_feed():
     current_feed = yield feeds.get()
-    url, title = current_feed['url'], current_feed['title']
-    for entry in (yield get_entries(url, title)):
-        if entry.days_age() < 7.:
-            yield entries.put(entry)
+    print('Fetching feed', current_feed['url'])
+    try:
+        url, title = current_feed['url'], current_feed['title']
+        for entry in (yield get_entries(url, title)):
+            if entry.days_age() < 7:
+                yield entries.put(entry)
+    finally:
+        feeds.task_done()
 
 
 @gen.coroutine
@@ -101,15 +109,18 @@ def feeds_producer():
 
 
 @gen.coroutine
-def main():
+def entries_update():
 
-    IOLoop.current().spawn_callback(feeds_consumer)
-    IOLoop.current().spawn_callback(entries_consumer)
-
-    yield feeds_producer()
-    yield feeds.join()
+    while True:
+        print('Starting entries update')
+        yield feeds_producer()
+        yield feeds.join()
+        yield entries.join()
+        print('Entries updated done')
+        yield gen.sleep(3600)
 
 
 if __name__ == "__main__":
-    print('Starting ...')
-    IOLoop.current().run_sync(main)
+    IOLoop.current().spawn_callback(feeds_consumer)
+    IOLoop.current().spawn_callback(entries_consumer)
+    IOLoop.current().run_sync(entries_update)

@@ -8,10 +8,15 @@ import os
 from math import pow
 from time import mktime
 from datetime import datetime
+import binascii
 
 
 def datetime_from_struct_time(struct_time):
-    return datetime.fromtimestamp(mktime(struct_time))
+    try:
+        return datetime.fromtimestamp(mktime(struct_time))
+    except OverflowError:
+        print('Error with struct_time', struct_time)
+        return datetime(1970, 1, 1)
 
 
 def string_from_struct_time(struct_time):
@@ -104,14 +109,19 @@ class Feed(object):
         self.url = url
         self.title = title
         self.entries = []
+        self.content = None
 
     def request_entries(self):
         try:
             self.content = feedparser.parse(self.url)
-        except UnicodeEncodeError:
-            print('UnicodeEncodeError', self.url)
+        except (UnicodeEncodeError, binascii.Error) as error:
+            print('Error:', error, self.url)
 
     def parse_entries(self):
+
+        if self.content is None:
+            return
+
         raw_entries = self.content.entries
         entries = []
 
@@ -131,7 +141,7 @@ class Feed(object):
         return self.entries
 
     def __str__(self):
-        print('{}: {}'.format(self.title, self.url))
+        return '<Feed: {} {}>'.format(self.title, self.url)
 
 
 class HackerNews(object):
