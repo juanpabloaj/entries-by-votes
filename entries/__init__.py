@@ -81,13 +81,16 @@ class Entry(object):
     def set_votes(self, votes):
         self.votes = votes
 
-    def get_rank(self):
+    def get_total_votes(self):
         total = 0.0
         for vote in self.votes:
             total += vote['votes'] - 1
 
+        return total
+
+    def get_rank(self):
         try:
-            return total / pow(self.hours_age() + 2., 1.8)
+            return self.get_total_votes() / pow(self.hours_age() + 2., 1.8)
         except ValueError:
             return 0.0
 
@@ -148,6 +151,7 @@ class HackerNews(object):
         hits = self.search_url(url)
 
         return [{
+            'source': 'hacker_news',
             'votes': hit.get('points', 0),
             'comments': hit.get('num_comments', 0),
             'id': hit.get('objectID', 0)
@@ -167,6 +171,7 @@ class Reddit(object):
         votes = []
         for sub in self.client.info(url=url):
             votes.append({
+                'source': 'reddit',
                 'subreddit': sub.subreddit.display_name,
                 'votes': sub.ups, 'comments': sub.num_comments
             })
