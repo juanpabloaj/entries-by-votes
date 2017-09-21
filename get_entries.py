@@ -18,7 +18,9 @@ db = client['entries-by-votes']
 
 @gen.coroutine
 def do_insert_entry(entry):
-    yield db.entries.insert_one(entry)
+    yield db.entries.update_one(
+        {'link': entry['link']}, {'$set': entry}, upsert=True
+    )
 
 
 @gen.coroutine
