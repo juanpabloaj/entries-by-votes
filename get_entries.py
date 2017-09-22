@@ -15,6 +15,8 @@ entries = queues.Queue()
 client = MotorClient(os.environ['MONGO_ENTRIES'])
 db = client['entries-by-votes']
 
+ENTRIES_AGE = float(os.environ.get('ENTRIES_AGE', 7))
+
 
 @gen.coroutine
 def do_insert_entry(entry):
@@ -90,7 +92,7 @@ def get_new_entries_from_feed():
     try:
         url, title = current_feed['url'], current_feed['title']
         for entry in (yield get_entries(url, title)):
-            if entry.days_age() < 7:
+            if entry.days_age() < ENTRIES_AGE:
                 yield entries.put(entry)
     finally:
         feeds.task_done()
