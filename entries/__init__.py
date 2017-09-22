@@ -14,8 +14,8 @@ import binascii
 def datetime_from_struct_time(struct_time):
     try:
         return datetime.fromtimestamp(mktime(struct_time))
-    except OverflowError:
-        print('Error with struct_time', struct_time)
+    except (OverflowError, ValueError) as error:
+        print('Error with struct_time:', error, struct_time)
         return datetime(1970, 1, 1)
 
 
