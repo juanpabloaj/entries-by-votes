@@ -61,7 +61,10 @@ def votes_from_entry(link):
 def entries_consumer():
     while True:
         current_entry = yield entries.get()
-        print('Fetching entry', current_entry.published, current_entry)
+        print(
+            'Fetching entry', entries.qsize(),
+            current_entry.published, current_entry
+        )
         try:
             for link in current_entry.links:
                 votes = yield votes_from_entry(link)
@@ -88,7 +91,7 @@ def entries_consumer():
 @gen.coroutine
 def get_new_entries_from_feed():
     current_feed = yield feeds.get()
-    print('Fetching feed', current_feed['url'])
+    print('Fetching feed', feeds.qsize(), current_feed['url'])
     try:
         url, title = current_feed['url'], current_feed['title']
         for entry in (yield get_entries(url, title)):
