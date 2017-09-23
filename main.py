@@ -19,7 +19,7 @@ class MainHandler(web.RequestHandler):
         cursor = db.entries.find({"rank": {"$gt": 0}}).sort('rank', -1)
         entries = yield cursor.to_list(length=100)
 
-        self.render('index.html', entries=entries)
+        self.render('templates/index.html', entries=entries)
 
 
 def make_app():
