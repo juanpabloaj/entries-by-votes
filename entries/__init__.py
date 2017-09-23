@@ -84,7 +84,7 @@ class Entry(object):
         return datetime(1970, 1, 1)
 
     def set_votes(self, votes):
-        self.votes = votes
+        self.votes = sorted(votes, key=lambda k: k['votes'], reverse=True)
 
     def get_total_votes(self):
         total = 0.0
