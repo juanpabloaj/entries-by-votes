@@ -4,7 +4,7 @@ import os
 from tornado import ioloop, gen
 from tornado import web
 from motor.motor_tornado import MotorClient
-from get_entries import entries_update, entries_consumer, feeds_consumer
+from entries.get_entries import entries_update, entries_consumer, feeds_consumer
 
 client = MotorClient(os.environ['MONGO_ENTRIES'])
 db = client['entries-by-votes']

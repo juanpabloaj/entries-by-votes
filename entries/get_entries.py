@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
-from entries import Opml, Feed
-from entries import HackerNews, Reddit
+from . import Opml, Feed
+from . import HackerNews, Reddit
 from tornado import gen, queues
 from tornado.ioloop import IOLoop
 from concurrent.futures import ThreadPoolExecutor
