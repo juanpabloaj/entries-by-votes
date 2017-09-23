@@ -4,22 +4,38 @@
         <meta charset="UTF-8" />
         <title>Entries by votes</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
     </head>
     <body>
         <div class="container">
 <h3><a href="https://github.com/kilimchoi/engineering-blogs">Engineering-blogs</a> entries order by Hacker News and Reddit votes</h3>
 <hr>
- <ul>
+ <ul class="">
    {% for entry in entries %}
    <li>
-       {{ entry['published'] }} {{ int(entry['total_votes']) }} {{ round(entry['rank'], 2) }} <a href="{{entry['link']}}" target="_blank">{{ entry['title'] }}</a>
-       <!--{{ entry['votes'] }}-->
+       <div>
+           {{ entry['published'] }}
+            <!--{{ round(entry['rank'], 2) }}-->
+           {{ int(entry['total_votes']) }}
+           <a href="{{entry['link']}}">{{ entry['title'] }}</a>
+        <ul class="list-inline">
+       {% for vote in entry['votes'] %}
+            <li class="">
+            {% if vote['source'] == 'hacker_news' %}
+            <a href="https://news.ycombinator.com/item?id={{vote['id']}}"><i class="fa fa-hacker-news" aria-hidden="true"></i> {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a>
+            {% else %}
+            <a href="https://www.reddit.com/r/{{vote['subreddit']}}"><i class="fa fa-reddit-square" aria-hidden="true"></i> r/{{vote['subreddit']}} {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a>
+            {% end %}
+            </li>
+       {% end %}
+        </ul>
+       </div>
    </li>
    {% end %}
  </ul>
  <hr>
  <footer>
-     <a href="https://github.com/juanpabloaj/entries-by-votes" target="_blank">Source code</a> | Powered by <a href="https://zeit.co/now">now</a>
+     <a href="https://github.com/juanpabloaj/entries-by-votes">Source code</a> | Powered by <a href="https://zeit.co/now">now</a>
  </footer>
         </div>
     </body>
