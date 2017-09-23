@@ -48,8 +48,12 @@
                             {% for vote in entry['votes'] %}
                             <li class="">
                                 {% if vote['source'] == 'hacker_news' %}
-                                <a href="https://news.ycombinator.com/item?id={{vote['id']}}"><i class="fa fa-hacker-news" aria-hidden="true"></i> {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a> {% else %}
-                                <a href="https://www.reddit.com/r/{{vote['subreddit']}}"><i class="fa fa-reddit-square" aria-hidden="true"></i> r/{{vote['subreddit']}} {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a> {% end %}
+                                <a href="https://news.ycombinator.com/item?id={{vote['id']}}"><i class="fa fa-hacker-news" aria-hidden="true"></i> {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a>
+                                {% else %}
+                                <a href="http://redd.it/{{vote.get('id', '')}}">
+                                    <i class="fa fa-reddit-square" aria-hidden="true"></i> r/{{vote['subreddit']}} {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}
+                                </a>
+                                {% end %}
                             </li>
                             {% end %}
                         </ul>

@@ -181,7 +181,7 @@ class Reddit(object):
         votes = []
         for sub in self.client.info(url=url):
             votes.append({
-                'source': 'reddit',
+                'source': 'reddit', 'id': sub.id,
                 'subreddit': sub.subreddit.display_name,
                 'votes': sub.ups, 'comments': sub.num_comments
             })
