@@ -179,11 +179,15 @@ class Reddit(object):
 
     def votes_and_comments(self, url):
         votes = []
-        for sub in self.client.info(url=url):
-            votes.append({
-                'source': 'reddit', 'id': sub.id,
-                'subreddit': sub.subreddit.display_name,
-                'votes': sub.ups, 'comments': sub.num_comments
-            })
+
+        try:
+            for sub in self.client.info(url=url):
+                votes.append({
+                    'source': 'reddit', 'id': sub.id,
+                    'subreddit': sub.subreddit.display_name,
+                    'votes': sub.ups, 'comments': sub.num_comments
+                })
+        except TypeError as err:
+            print(url, err)
 
         return votes
