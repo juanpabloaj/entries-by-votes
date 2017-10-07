@@ -15,7 +15,7 @@ entries = queues.Queue()
 client = MotorClient(os.environ['MONGO_ENTRIES'])
 db = client['entries-by-votes']
 
-ENTRIES_AGE = float(os.environ.get('ENTRIES_AGE', 7))
+ENTRIES_AGE = float(os.environ.get('ENTRIES_AGE', 14))
 
 
 @gen.coroutine
