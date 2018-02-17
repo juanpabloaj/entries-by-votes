@@ -6,6 +6,7 @@ from tornado import web
 from motor.motor_tornado import MotorClient
 from entries.get_entries import entries_update
 from entries.get_entries import entries_consumer, feeds_consumer
+from datetime import datetime
 
 client = MotorClient(os.environ['MONGO_ENTRIES'])
 db = client['entries-by-votes']
