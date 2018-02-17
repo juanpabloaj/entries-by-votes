@@ -6,7 +6,7 @@ from tornado import web
 from motor.motor_tornado import MotorClient
 from entries.get_entries import entries_update
 from entries.get_entries import entries_consumer, feeds_consumer
-from datetime import datetime, timedelta
+from datetime import datetime
 
 client = MotorClient(os.environ['MONGO_ENTRIES'])
 db = client['entries-by-votes']
@@ -18,10 +18,19 @@ class MainHandler(web.RequestHandler):
     def get(self):
         db = self.settings['db']
 
-        last_week = datetime.now() - timedelta(days=7)
-        cursor = db.entries.find({
-            "rank": {"$gt": 0}, "published": {"$gt": last_week}
-        }).sort('rank', -1).limit(100)
+        cursor = db.entries.aggregate([
+            {'$project': {
+                '_id':0, 'link':1, 'title':1, 'published':1, 'total_votes':1, 'votes':1, 'rank': {
+                '$divide': ["$total_votes", {
+                    '$pow': [{
+                        '$add': [{'$divide': [{'$subtract' : [datetime.now(), "$published"]}, 1000*60*60]}, 2]
+                    }, 1.8]
+                }]
+            }}},
+            {'$sort': {'rank': -1}},
+            {'$limit': 100},
+        ]);
+
         entries = yield cursor.to_list(length=100)
 
         self.render('templates/index.html', entries=entries)
