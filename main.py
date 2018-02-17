@@ -17,8 +17,19 @@ class MainHandler(web.RequestHandler):
     def get(self):
         db = self.settings['db']
 
-        cursor = db.entries.find({"rank": {"$gt": 0}})\
-            .sort('rank', -1).limit(100)
+        cursor = db.entries.aggregate([
+            {'$project': {
+                '_id':0, 'link':1, 'title':1, 'published':1, 'total_votes':1, 'votes':1, 'rank': {
+                '$divide': ["$total_votes", {
+                    '$pow': [{
+                        '$add': [{'$divide': [{'$subtract' : [datetime.now(), "$published"]}, 1000*60*60]}, 2]
+                    }, 1.8]
+                }]
+            }}},
+            {'$sort': {'rank': -1}},
+            {'$limit': 100},
+        ]);
+
         entries = yield cursor.to_list(length=100)
 
         self.render('templates/index.html', entries=entries)
