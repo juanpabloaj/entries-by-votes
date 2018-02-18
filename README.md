@@ -1,4 +1,4 @@
-# Engineering-blogs entries order by Hacker News and Reddit votes
+# Engineering-blogs entries ordered by Hacker News and Reddit votes
 
 1. Get feeds of [Engineering-blogs](https://github.com/kilimchoi/engineering-blogs).
 2. Get entries of feeds.
