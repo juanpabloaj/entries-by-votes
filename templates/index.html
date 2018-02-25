@@ -6,7 +6,7 @@
     <title>Entries by votes</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" charset="utf-8"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -40,6 +40,7 @@
                     {{ entry['published'] }}
                     <!--{{ round(entry['rank'], 2) }}-->
                     <a class="btn btn-default btn-xs" role="button" data-toggle="collapse" href="#collapseList-{{entry_num}}" aria-expanded="false" aria-controls="collapseList-{{entry_num}}">
+                    <i class="far fa-arrow-alt-circle-up"></i>
                 {{ int(entry['total_votes']) }}
             </a>
                     <a href="{{entry['link']}}">{{ entry['title'] }}</a>
@@ -48,10 +49,10 @@
                             {% for vote in entry['votes'] %}
                             <li class="">
                                 {% if vote['source'] == 'hacker_news' %}
-                                <a href="https://news.ycombinator.com/item?id={{vote['id']}}"><i class="fa fa-hacker-news" aria-hidden="true"></i> {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}</a>
+                                <a href="https://news.ycombinator.com/item?id={{vote['id']}}"><i class="fab fa-hacker-news-square" aria-hidden="true"></i> {{vote['votes']}} <i class="far fa-comment" aria-hidden="true"></i> {{vote['comments']}}</a>
                                 {% else %}
                                 <a href="http://redd.it/{{vote.get('id', '')}}">
-                                    <i class="fa fa-reddit-square" aria-hidden="true"></i> r/{{vote['subreddit']}} {{vote['votes']}} <i class="fa fa-comment-o" aria-hidden="true"></i> {{vote['comments']}}
+                                    <i class="fab fa-reddit-square" aria-hidden="true"></i> r/{{vote['subreddit']}} {{vote['votes']}} <i class="far fa-comment" aria-hidden="true"></i> {{vote['comments']}}
                                 </a>
                                 {% end %}
                             </li>
