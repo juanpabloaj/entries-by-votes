@@ -27,17 +27,20 @@
         ga('create', 'UA-106882528-1', 'auto');
         ga('send', 'pageview');
     </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
     <div class="container">
         <h3><a href="https://github.com/kilimchoi/engineering-blogs">Engineering-blogs</a> entries ordered by Hacker News and Reddit votes</h3>
         <hr>
-        <ul class="">
+        <ul class="list-unstyled">
             {% for entry_num, entry in enumerate(entries) %}
             <li>
                 <div>
-                    {{ entry['published'] }}
+                    <span class="hidden-xs">
+                        {{ entry['published'] }}
+                    </span>
                     <!--{{ round(entry['rank'], 2) }}-->
                     <a class="btn btn-default btn-xs" role="button" data-toggle="collapse" href="#collapseList-{{entry_num}}" aria-expanded="false" aria-controls="collapseList-{{entry_num}}">
                     <i class="far fa-arrow-alt-circle-up"></i>
