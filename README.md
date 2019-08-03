@@ -18,3 +18,11 @@
     PRAW_USER_AGENT
     MONGO_ENTRIES
     TORNADO_PORT
+
+### Deploy to zeit.co/now
+
+Add the environment variables to a entries.env file.
+
+Deploy with now
+
+    now --dotenv entries.env --public
