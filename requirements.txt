@@ -3,5 +3,5 @@ flake8==3.4.1
 listparser==0.18
 motor==1.1
 praw==5.1.0
-requests==2.18.4
+requests==2.20.0
 tornado==4.5.2
